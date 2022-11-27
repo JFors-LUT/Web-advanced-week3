@@ -1,6 +1,16 @@
 const express = require("express");
 const app = express();
 const port = 3000;
+const pug = require('pug');
+
+// Compile the source code
+const compiledFunction = pug.compileFile('template.pug');
+
+
+
+// Render the function
+
+// "<p>Forbes's Pug source code!</p>"s
 
 //const inputName = document.createElement("input")
 //inputName.id = "input-name"
@@ -12,10 +22,8 @@ let inputText = [];
 
 
 app.get("/", (req, res) =>{
-  res.write("<h1>My todos</h1>")
-  res.write("Enter name: <input id='input-name'><br> \
-  Enter task: <input id='input-task'><br>")
-  res.write("<button id='submit-data'>Submit</button>")
+
+  res.write(compiledFunction())
   res.end()
 })
 

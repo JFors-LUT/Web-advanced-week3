@@ -1,0 +1,16 @@
+//- template.pug
+//-p #{name}'s Pug source code!
+
+doctype html
+html(lang="en")
+  head
+    title= pageTitle
+    script(src="index.js" defer).
+      if (foo) bar(1 + 5);
+  body
+    h1 My todos
+    input(id='input-name')  
+    br
+    input(id='input-task')
+    br
+    button(type='button' id='submit-data') Submit

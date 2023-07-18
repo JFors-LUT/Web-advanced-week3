@@ -23,6 +23,7 @@ submit_button.addEventListener('click', () => {
   .then(data => {
     const message = data.message;
     console.log(message)
+    result_container.innerHTML = message
     //document.getElementById('message-container').textContent = message;
   })
   .catch(error => {
@@ -32,7 +33,7 @@ submit_button.addEventListener('click', () => {
 
 
 search_button.addEventListener('click', () => {
-  const search = document.getElementById('input-search').value;
+  const search = document.getElementById('search-name').value;
   result_container.innerHTML = '';
 
   //send GET

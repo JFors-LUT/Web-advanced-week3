@@ -47,4 +47,32 @@ router.delete('/:id', function(req, res, next) {
   }
 });
 
+router.put('/', function(req, res, next) {
+  const userId = req.body.id; 
+  const taskToDelete = req.body.task; 
+
+  let userFound = false;
+  for (let i = 0; i < todo_array.length; i++) {
+    const user = todo_array[i];
+
+    const key = Object.keys(user)[0];
+    if (key === userId) {
+      const tasks = user[key];
+      const index = tasks.indexOf(taskToDelete);
+      if (index !== -1) {
+        tasks.splice(index, 1);
+        userFound = true;
+        break;
+      }
+    }
+  }
+
+  if (userFound) {
+    res.status(200).json({ message: 'Task deleted' });
+  } else {
+    res.status(404).json({ message: 'User not found' });
+  }
+});
+
+
 module.exports = router;

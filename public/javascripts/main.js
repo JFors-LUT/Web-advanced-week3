@@ -35,6 +35,8 @@ submit_button.addEventListener('click', () => {
 search_button.addEventListener('click', () => {
   const search = document.getElementById('search-name').value;
   result_container.innerHTML = '';
+  const delete_button = document.createElement('button');
+  console.log(delete_button)
 
   //send GET
   fetch(`/user/${search}`)
@@ -46,11 +48,66 @@ search_button.addEventListener('click', () => {
 
       console.log(result);
 
-      result_container.textContent = "Name: "+key+"\n Todo: "+value //result;
-      const delete_button = document.createElement('button');
+      
+      result_container.textContent = "User not found"
+      
       delete_button.id = "delete-user"
-      delete_button.textContent = 'Delete '+key
+      delete_button.textContent = 'Delete user: '+key
+      //to delete and replace previous delete button
+      const delete_user_button = document.getElementById('delete-user');
+      if (delete_user_button) {
+        delete_user_button.remove();
+      }
+      if(key !== 'message'){
+      result_container.textContent = "Name: "+key+"\n Todo: "+value //result;
       document.body.appendChild(delete_button)
+      }
+      //add buttons to delete tasks
+      const tasks = value;
+      tasks.forEach(task => {
+        const delete_task = document.createElement('button');
+        delete_task.classList.add('delete-task');
+        delete_task.textContent = 'Delete '+task;
+        result_container.appendChild(delete_task);
+
+        delete_task.addEventListener('click', () => {
+          // Send PUT request to delete task
+          fetch('/user', {
+            method: 'PUT',
+            body: JSON.stringify({
+              id: key,
+              task: task,
+            }),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response =>{             
+            if (response.status === 200) {
+            return response.json();
+          } else if (response.status === 404) {
+            result_container.textContent = "User not found";
+            throw new Error('User not found');  
+          } else {
+            throw new Error('Server error');
+          }})
+          .then(data => {
+            const message = data.message;
+            console.log(message);
+
+            /* Remove the deleted task from the user interface
+            result_container.removeChild(deleteButton);
+            const taskParagraph = document.createElement('p');
+            taskParagraph.textContent = 'Task deleted: ' + task;
+            result_container.appendChild(taskParagraph);
+            */
+           result_container.innerHTML = message
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        });
+      });
 
       //listen to delete
       delete_button.addEventListener('click', () => {
